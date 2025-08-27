@@ -5,14 +5,14 @@ class TextFormFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final int maxLine;
-  final IconData prefixIcon;
+  final IconData? prefixIcon;
   final String labeltext;
   const TextFormFieldWidget({
     super.key,
     required this.controller,
     required this.validator,
     this.maxLine = 1,
-    required this.prefixIcon,
+     this.prefixIcon,
     this.labeltext = "",
   });
 
@@ -26,7 +26,7 @@ class TextFormFieldWidget extends StatelessWidget {
 
       decoration: InputDecoration(
         label: Text(labeltext),
-        prefixIcon: Icon(prefixIcon),
+        prefixIcon: (prefixIcon!=null)?Icon(prefixIcon):null,
         border: InputBorder.none,
         filled: true,
         fillColor: kWhite,

@@ -13,13 +13,13 @@ class CardTopSession extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(image, width: 100),
+        Image.asset(image, width: 80),
         AppSizedBox.h20,
         TextWidget(
           text: text,
           color: kBlack,
           fontWeight: FontWeight.bold,
-          size: 24,
+          size: 20,
         ),
       ],
     );
