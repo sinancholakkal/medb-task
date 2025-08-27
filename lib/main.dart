@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medb_task/bloc/auth/auth_bloc.dart';
 import 'package:medb_task/routes/app_router.dart';
 import 'package:medb_task/utils/app_theme.dart';
 
@@ -11,10 +13,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      routerConfig: appRouter,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AuthBloc(),)
+      ],
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        routerConfig: appRouter,
+      ),
     );
   }
 }
