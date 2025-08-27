@@ -6,23 +6,26 @@ class TextFormFieldWidget extends StatelessWidget {
   final String? Function(String?)? validator;
   final int maxLine;
   final IconData prefixIcon;
+  final String labeltext;
   const TextFormFieldWidget({
     super.key,
     required this.controller,
     required this.validator,
-    this.maxLine =1,
-    required this.prefixIcon
+    this.maxLine = 1,
+    required this.prefixIcon,
+    this.labeltext = "",
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      
       maxLines: maxLine,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       controller: controller,
+
       decoration: InputDecoration(
+        label: Text(labeltext),
         prefixIcon: Icon(prefixIcon),
         border: InputBorder.none,
         filled: true,
