@@ -6,7 +6,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final String? Function(String?)? validator;
   final int maxLine;
   final IconData prefixIcon;
-  TextFormFieldWidget({
+  const TextFormFieldWidget({
     super.key,
     required this.controller,
     required this.validator,
