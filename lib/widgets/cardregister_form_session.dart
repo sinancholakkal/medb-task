@@ -43,7 +43,7 @@ class _CardRegisterFormSessionState extends State<CardRegisterFormSession> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if(state is AuthLoadedState){
-          flutterToast(msg: state.message);
+          flutterToast(msg: "${state.message}! Please verify your email");
           context.go("/login");
         }else if(state is AuthErrorState){
           flutterToast(msg: state.errorMessage);
