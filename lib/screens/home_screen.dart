@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medb_task/utils/app_color.dart';
+import 'package:medb_task/utils/app_string.dart';
 import 'package:medb_task/widgets/app_sizedbox.dart';
 import 'package:medb_task/widgets/image_button.dart';
+import 'package:medb_task/widgets/show_diolog.dart';
 import 'package:medb_task/widgets/text_feild.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,7 +17,9 @@ class HomeScreen extends StatelessWidget {
         
         actions: [
           ImageButton(image: "asset/notify.png",),
-          ImageButton(image: "asset/logout.png",)
+          ImageButton(image: "asset/logout.png",onTap: () => showDiolog(context: context, title: AppStrings.logout, content: AppStrings.logoutContent,cancelTap: () => GoRouter.of(context).pop(),confirmTap: () {
+            
+          },),)
         ],
         backgroundColor: kWhite,
         iconTheme: IconThemeData(

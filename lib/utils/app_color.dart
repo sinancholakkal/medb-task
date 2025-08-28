@@ -7,3 +7,4 @@ const kBlack = Colors.black;
 const kGrey = Colors.grey;
 const kBlue = Colors.blue;
 const KBcolor = Colors.deepPurpleAccent;
+const Kred = Colors.red;

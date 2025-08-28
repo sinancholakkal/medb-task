@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medb_task/models/login_model.dart';
 import 'package:medb_task/models/register_model.dart';
 import 'package:medb_task/services/dio_client.dart';
+import 'package:medb_task/utils/app_string.dart';
 
 class AuthServices {
   final DioClient dioClient = DioClient();
@@ -60,7 +61,7 @@ class AuthServices {
       final userDetails = response.data["userDetails"];
       final menuData = response.data["menuData"];
 
-      await _storage.write(key: "accessToken", value: accessToken);
+      await _storage.write(key: AppStrings.accessToken, value: accessToken);
       // await _storage.write(key: "loginKey", value: loginKey);
       // await _storage.write(key: "userDetails", value: userDetails.toString());
       // await _storage.write(key: "menuData", value: menuData.toString());

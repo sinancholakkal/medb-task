@@ -15,4 +15,9 @@ class AppStrings {
   static const String alreadycc = "Already have an account";
   static const String accessToken = "accessToken";
   static const String lSuccessMsg = "Successfully logged in";
+  static const String cancel = "cancel";
+  static const conform = "Yes, Confirm";
+  static const logout = "Logout";
+  static const logoutContent = "Are you sure you want to logout?";
+
 }
