@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Future<void>splashing()async{
     final accessToken = await FlutterSecureStorage().read(key: AppStrings.accessToken);
+    log(accessToken.toString());
     await Future.delayed(Duration(seconds: 3));
     if(accessToken !=null){
       context.go("/home");

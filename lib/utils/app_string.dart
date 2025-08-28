@@ -19,5 +19,7 @@ class AppStrings {
   static const conform = "Yes, Confirm";
   static const logout = "Logout";
   static const logoutContent = "Are you sure you want to logout?";
+  static const logoutS = "Logout successful";
+  static const logoutF = "Logout failed";
 
 }

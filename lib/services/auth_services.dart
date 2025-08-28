@@ -44,39 +44,79 @@ class AuthServices {
     }
   }
 
-  Future<bool> login({required LoginModel loginModel}) async {
-    log("Log service called================");
+Future<String> login({required LoginModel loginModel}) async {
+  log("Log service called================");
+  try {
+    final response = await dioClient.dio.post(
+      "auth/login",
+      data: {"email": loginModel.email, "password": loginModel.password},
+      options: Options(
+        extra: {"withCredentials": true, "isLogin": true},
+        headers: {"Content-Type": "application/json"},
+      ),
+    );
+    log("status code is ${response.statusCode} =====================");
+
+    // Assuming a successful response returns an access token
+    if (response.statusCode == 200 && response.data != null) {
+      final accessToken = response.data[AppStrings.accessToken];
+      if (accessToken != null) {
+         await _storage.write(key: AppStrings.accessToken, value: accessToken);
+        
+        log("Login successful");
+        return "Login successful";
+      }
+    }
+    return "Login failed: Missing access token in response";
+
+  } on DioException catch (e) {
+    String errorMessage = "Login failed: An unknown error occurred.";
+    if (e.response != null && e.response!.data != null && e.response!.data is Map) {
+      errorMessage = e.response!.data["message"] ?? 'Login failed: No specific message from server.';
+    } else if (e.response != null && e.response!.data != null) {
+      errorMessage = e.response!.data.toString();
+    }
+    
+    log("Login failed: $errorMessage");
+    throw Exception(errorMessage);
+
+  } catch (e) {
+    log("Login failed: $e");
+    throw Exception("Login failed due to an unexpected error.");
+  }
+}
+
+  Future<bool> logout() async {
     try {
       final response = await dioClient.dio.post(
-        "auth/login",
-        data: {"email": loginModel.email, "password": loginModel.password},
+        "auth/logout",
         options: Options(
           extra: {"withCredentials": true},
           headers: {"Content-Type": "application/json"},
+          validateStatus: (_) => true,
         ),
       );
-      log("status code is ${response.statusCode} =====================");
-      final accessToken = response.data["accessToken"];
-      final loginKey = response.data["loginKey"];
-      final userDetails = response.data["userDetails"];
-      final menuData = response.data["menuData"];
 
-      await _storage.write(key: AppStrings.accessToken, value: accessToken);
-      // await _storage.write(key: "loginKey", value: loginKey);
-      // await _storage.write(key: "userDetails", value: userDetails.toString());
-      // await _storage.write(key: "menuData", value: menuData.toString());
+      if (response.statusCode == 200) {
+        log("Statuscode is ${response.statusCode}");
+        String message;
+        if (response.data is Map) {
+          message = response.data['message'] ?? 'Logout successful.';
+        } else {
+          message = response.data.toString();
+        }
+        log("Logout success: $message");
 
-      log(accessToken);
-      log(loginKey.runtimeType.toString());
-      log(userDetails.runtimeType.toString());
-      log(menuData.runtimeType.toString());
-
-      return true;
-    } on DioException catch (e) {
-      log("Login failed: ${e.response?.data['message'] ?? 'Unknown error'}");
-      return false;
+        await _storage.delete(key: AppStrings.accessToken);
+        await dioClient.cookieJar.deleteAll();
+        return true;
+      } else {
+        log("Logout failed: ${response.statusCode} ${response.data}");
+        return false;
+      }
     } catch (e) {
-      log("Login failed: $e");
+      log("Logout exceptionn: $e");
+
       return false;
     }
   }

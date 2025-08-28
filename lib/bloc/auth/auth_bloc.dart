@@ -11,25 +11,44 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final authServices = AuthServices();
   AuthBloc() : super(AuthInitial()) {
-    on<RegisterEvent>((event, emit)async {
+    on<RegisterEvent>((event, emit) async {
       emit(AuthLoadingState());
-      try{
-        final message = await authServices.register(registerModel: event.registerModel);
+      String message = "";
+      try {
+        message = await authServices.register(
+          registerModel: event.registerModel,
+        );
         emit(AuthLoadedState(message: message));
-      }catch(e){
-        emit(AuthErrorState(errorMessage: e.toString()));
+      } catch (e) {
+        emit(AuthErrorState(errorMessage: message));
       }
     });
-    on<LoginEvent>((event, emit)async {
+    on<LoginEvent>((event, emit) async {
       emit(AuthLoadingState());
-      try{
-        final isLoggedIn = await authServices.login(loginModel: event.loginModel);
-        if(isLoggedIn){
-          emit(AuthLoadedState(message: AppStrings.lSuccessMsg));
-        }else{
-          emit(AuthErrorState(errorMessage: "Authentication failed"));
+      try {
+        await authServices.login(loginModel: event.loginModel);
+        emit(AuthLoadedState(message: 'Login successful!'));
+      } on Exception catch (e) {
+        emit(
+          AuthErrorState(
+            errorMessage: e.toString().replaceFirst('Exception: ', ''),
+          ),
+        );
+      } catch (e) {
+        emit(AuthErrorState(errorMessage: "An unexpected error occurred."));
+      }
+    });
+
+    on<LogoutEvent>((event, emit) async {
+      emit(AuthLoadingState());
+      try {
+        final isLogout = await authServices.logout();
+        if (isLogout) {
+          emit(AuthLoadedState(message: AppStrings.logoutS));
+        } else {
+          emit(AuthErrorState(errorMessage: AppStrings.logoutF));
         }
-      }catch(e){
+      } catch (e) {
         emit(AuthErrorState(errorMessage: e.toString()));
       }
     });

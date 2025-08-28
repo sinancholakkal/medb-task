@@ -1,13 +1,25 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medb_task/utils/app_string.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DioClient {
   final Dio _dio = Dio();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  late PersistCookieJar cookieJar;
+
   DioClient() {
+    _init();
+  }
+
+  Future<void> _init() async {
+    final dir = await getApplicationDocumentsDirectory();
+    cookieJar = PersistCookieJar(storage: FileStorage('${dir.path}/.cookies/'));
+    _dio.interceptors.add(CookieManager(cookieJar));
+
     _dio.options = BaseOptions(
       baseUrl: "https://testapi.medb.co.in/api/",
       connectTimeout: const Duration(seconds: 10),
@@ -17,18 +29,27 @@ class DioClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          log("OnRequest bloc staretd");
+          log("OnRequest bloc stared");
           final accessToken = await _storage.read(key: AppStrings.accessToken);
-          print(options.uri.toString());
-          print(options.data.toString());
-          print(options.headers.toString());
+          log(options.uri.toString());
+          log(options.data.toString());
+          log("after printing data");
+          log(options.headers.toString());
+          log("after printing header");
           if (accessToken != null) {
+            log("In access token not null");
             options.headers["Authorization"] = "Bearer $accessToken";
           }
+          log("Loging before return handler.next");
           return handler.next(options);
         },
+        // In your DioClient InterceptorsWrapper
         onError: (error, handler) async {
-          if (error.response?.statusCode == 400) {
+          // Check if the request has the "isLogin" flag set
+          final isLogin = error.requestOptions.extra["isLogin"] == true;
+
+          // Only attempt to refresh the token if it's a 401 and NOT a login request
+          if (error.response?.statusCode == 401 && !isLogin) {
             final refreshed = await _refreshToken();
             if (refreshed) {
               final retryRequest = await _dio.fetch(error.requestOptions);
@@ -40,7 +61,9 @@ class DioClient {
       ),
     );
   }
+
   Dio get dio => _dio;
+
   Future<bool> _refreshToken() async {
     try {
       final response = await _dio.post(
@@ -57,6 +80,7 @@ class DioClient {
       }
       return false;
     } catch (e) {
+      log("Refresh token failed: $e");
       return false;
     }
   }
