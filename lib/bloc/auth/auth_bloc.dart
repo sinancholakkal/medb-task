@@ -23,11 +23,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginEvent>((event, emit)async {
       emit(AuthLoadingState());
       try{
-        final message = await authServices.login(loginModel: event.loginModel);
-        if(message){
+        final isLoggedIn = await authServices.login(loginModel: event.loginModel);
+        if(isLoggedIn){
           emit(AuthLoadedState(message: AppStrings.lSuccessMsg));
         }else{
-          
+          emit(AuthErrorState(errorMessage: "Authentication failed"));
         }
       }catch(e){
         emit(AuthErrorState(errorMessage: e.toString()));

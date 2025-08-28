@@ -1,7 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medb_task/bloc/auth/auth_bloc.dart';
+import 'package:medb_task/models/login_model.dart';
 import 'package:medb_task/utils/app_color.dart';
 import 'package:medb_task/utils/app_string.dart';
 import 'package:medb_task/utils/app_validation.dart';
@@ -9,11 +12,10 @@ import 'package:medb_task/widgets/elevated_button.dart';
 import 'package:medb_task/widgets/rich_text_widget.dart';
 import 'package:medb_task/widgets/text_feild.dart';
 import 'package:medb_task/widgets/text_form_widget.dart';
+import 'package:medb_task/widgets/toast.dart';
 
 class CardLoginFormSession extends StatefulWidget {
-   const CardLoginFormSession({
-    super.key,
-  });
+  const CardLoginFormSession({super.key});
 
   @override
   State<CardLoginFormSession> createState() => _CardLoginFormSessionState();
@@ -35,66 +37,82 @@ class _CardLoginFormSessionState extends State<CardLoginFormSession> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(22),
-        child: Column(
-          spacing: 22,
-          children: [
-            TextFormFieldWidget(
-              labeltext: AppStrings.email,
-              controller: emailController,
-              prefixIcon: Icons.email_outlined,
-              validator: (p0) {
-                return Validation.emailValidation(p0);
-              },
-            ),
-            TextFormFieldWidget(
-              labeltext: AppStrings.password,
-              controller: passwordController,
-              prefixIcon: Icons.lock_outline_rounded,
-              validator: (p0) {
-                return Validation.passWordValidation(p0);
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(Icons.lock_outline, color: kBlue, size: 18),
-    
-                TextWidget(
-                  text: AppStrings.forgotPassword,
-                  color: kBlue,
-                  size: 16,
-                ),
-              ],
-            ),
-            //Button for navigation---------------
-            ElevatedWidget(
-              text: AppStrings.login,
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  log(" Validated--------------------");
-    
-                  // _signIn(context);
-                } else {
-                  log("Not Validated--------------------");
-                }
-              },
-            ),
-            //Rich text widget-----------
-            RichTextWidget(
-              text: AppStrings.dontaccount,
-              eventText: " ${AppStrings.register}",
-              onTap: (){
-                context.go("/register");
-              },
-            ),
-          ],
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if(state is AuthLoadedState){
+          flutterToast(msg: state.message);
+          context.go("/home");
+        }else if(state is AuthErrorState){
+          flutterToast(msg: state.errorMessage);
+        }
+      },
+      child: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(22),
+          child: Column(
+            spacing: 22,
+            children: [
+              TextFormFieldWidget(
+                labeltext: AppStrings.email,
+                controller: emailController,
+                prefixIcon: Icons.email_outlined,
+                validator: (p0) {
+                  return Validation.emailValidation(p0);
+                },
+              ),
+              TextFormFieldWidget(
+                labeltext: AppStrings.password,
+                controller: passwordController,
+                prefixIcon: Icons.lock_outline_rounded,
+                validator: (p0) {
+                  return Validation.passWordValidation(p0);
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(Icons.lock_outline, color: kBlue, size: 18),
+
+                  TextWidget(
+                    text: AppStrings.forgotPassword,
+                    color: kBlue,
+                    size: 16,
+                  ),
+                ],
+              ),
+              //Button for navigation---------------
+              ElevatedWidget(
+                text: AppStrings.login,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    log(" Validated--------------------");
+
+                    final loginModel = LoginModel(
+                      email: emailController.text.trim(),
+                      password: passwordController.text.trim(),
+                    );
+                    log("Login Bloc called");
+                    context.read<AuthBloc>().add(
+                      LoginEvent(loginModel: loginModel),
+                    );
+                  } else {
+                    log("Not Validated--------------------");
+                  }
+                },
+              ),
+              //Rich text widget-----------
+              RichTextWidget(
+                text: AppStrings.dontaccount,
+                eventText: " ${AppStrings.register}",
+                onTap: () {
+                  context.go("/register");
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-

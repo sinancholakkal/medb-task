@@ -29,6 +29,7 @@ class AuthServices {
           "password": registerModel.password,
           "confirmPassword": registerModel.confirmpassword,
         },
+        options: Options(headers: {"Content-Type": "application/json"}),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -49,22 +50,30 @@ class AuthServices {
   }
 
   Future<bool> login({required LoginModel loginModel}) async {
+    log("Log service called================");
     try {
       final response = await dioClient.dio.post(
         "auth/login",
         data: {"email": loginModel.email, "password": loginModel.password},
-        options: Options(extra: {"withCredentials": true})
+        options: Options(
+          extra: {"withCredentials": true},
+          headers: {"Content-Type": "application/json"},
+        ),
       );
+      log("status code is ${response.statusCode} =====================");
       final accessToken = response.data["accessToken"];
       final loginKey = response.data["loginKey"];
       final userDetails = response.data["userDetails"];
       final menuData = response.data["menuData"];
       log(accessToken);
-      log(loginKey);
-      log(userDetails);
-      log(menuData);
+      log(loginKey.runtimeType.toString());
+      log(userDetails.runtimeType.toString());
+      log(menuData.runtimeType.toString());
 
       return true;
+    } on DioException catch (e) {
+      log("Login failed: ${e.response?.data['message'] ?? 'Unknown error'}");
+      return false;
     } catch (e) {
       log("Login failed: $e");
       return false;

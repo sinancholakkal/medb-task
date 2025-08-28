@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medb_task/utils/app_string.dart';
@@ -15,20 +17,23 @@ class DioClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          log("OnRequest bloc staretd");
           final accessToken = await _storage.read(key: AppStrings.accessToken);
+          print(options.uri.toString());
+          print(options.data.toString());
+          print(options.headers.toString());
           if (accessToken != null) {
             options.headers["Authorization"] = "Bearer $accessToken";
           }
           return handler.next(options);
         },
-        onError: (error, handler)async {
+        onError: (error, handler) async {
           if (error.response?.statusCode == 400) {
             final refreshed = await _refreshToken();
-            if(refreshed){
+            if (refreshed) {
               final retryRequest = await _dio.fetch(error.requestOptions);
               return handler.resolve(retryRequest);
             }
-            
           }
           return handler.next(error);
         },
@@ -43,8 +48,11 @@ class DioClient {
         options: Options(extra: {"withCredentials": true}),
       );
       final newAccessToken = response.data[AppStrings.accessToken];
-      if(newAccessToken!=null){
-        await _storage.write(key: AppStrings.accessToken, value: newAccessToken);
+      if (newAccessToken != null) {
+        await _storage.write(
+          key: AppStrings.accessToken,
+          value: newAccessToken,
+        );
         return true;
       }
       return false;
