@@ -7,12 +7,6 @@ import 'package:medb_task/models/register_model.dart';
 import 'package:medb_task/services/dio_client.dart';
 
 class AuthServices {
-  // final Dio _dio = Dio(
-  //   BaseOptions(
-  //     baseUrl: "https://testapi.medb.co.in/api/auth",
-  //     headers: {"Content-Type": "application/json"},
-  //   ),
-  // );
   final DioClient dioClient = DioClient();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
@@ -65,6 +59,12 @@ class AuthServices {
       final loginKey = response.data["loginKey"];
       final userDetails = response.data["userDetails"];
       final menuData = response.data["menuData"];
+
+      await _storage.write(key: "accessToken", value: accessToken);
+      // await _storage.write(key: "loginKey", value: loginKey);
+      // await _storage.write(key: "userDetails", value: userDetails.toString());
+      // await _storage.write(key: "menuData", value: menuData.toString());
+
       log(accessToken);
       log(loginKey.runtimeType.toString());
       log(userDetails.runtimeType.toString());
