@@ -11,7 +11,7 @@ import 'package:medb_task/widgets/text_feild.dart';
 import 'package:medb_task/widgets/text_form_widget.dart';
 
 class CardLoginFormSession extends StatefulWidget {
-   CardLoginFormSession({
+   const CardLoginFormSession({
     super.key,
   });
 

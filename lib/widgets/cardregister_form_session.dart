@@ -8,7 +8,7 @@ import 'package:medb_task/widgets/rich_text_widget.dart';
 import 'package:medb_task/widgets/text_form_widget.dart';
 
 class CardRegisterFormSession extends StatefulWidget {
-   CardRegisterFormSession({
+   const CardRegisterFormSession({
     super.key,
   });
 
