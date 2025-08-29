@@ -20,6 +20,7 @@ class TextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
+      textAlign: TextAlign.center,
       maxLines: maxLine,
       overflow: TextOverflow.ellipsis,
       text,

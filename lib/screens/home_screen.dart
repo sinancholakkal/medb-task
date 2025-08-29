@@ -5,10 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medb_task/bloc/auth/auth_bloc.dart';
-import 'package:medb_task/services/auth_services.dart';
+import 'package:medb_task/bloc/hive_bloc/hive_bloc.dart';
 import 'package:medb_task/utils/app_color.dart';
+import 'package:medb_task/utils/app_sizes.dart';
 import 'package:medb_task/utils/app_string.dart';
 import 'package:medb_task/widgets/app_sizedbox.dart';
+import 'package:medb_task/widgets/drawer_session.dart';
 import 'package:medb_task/widgets/image_button.dart';
 import 'package:medb_task/widgets/loading.dart';
 import 'package:medb_task/widgets/show_diolog.dart';
@@ -23,18 +25,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void get(){
-    final resp =  getLoginResponse();
-    if(resp!=null){
-      log(resp["firstName"]);
-      log("======================");
-    }
-  }
-  @override
-  void initState() {
-get();
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,34 +44,13 @@ get();
               },
             ),
           ),
+          AppSizedBox.w8,
         ],
         backgroundColor: kWhite,
         iconTheme: IconThemeData(color: kBlack),
       ),
-      drawer: Drawer(
-        backgroundColor: Colors.grey[100],
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            AppSizedBox.h70,
-            SizedBox(
-              width: 45,
-              height: 45,
-              child: Image.asset("asset/medb-logo-png-BRGSYv_I.png"),
-            ),
-            AppSizedBox.h24,
-            ListTile(
-              leading: CircleAvatar(),
-              title: TextWidget(
-                text: "Muhammed Sinan",
-                color: kBlack,
-                fontWeight: FontWeight.bold,
-                size: 22,
-              ),
-            ),
-          ],
-        ),
-      ),
+      //Drawer session-------
+      drawer: DrawerSession(),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoadingState) {
@@ -95,7 +64,39 @@ get();
             flutterToast(msg: state.errorMessage);
           }
         },
-        child: Center(child: Text('Hello, this is the body!')),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset("asset/medb-logo-png-BRGSYv_I.png", width: 100),
+                AppSizedBox.h24,
+                TextWidget(
+                  text: "Welcome to MedB!",
+                  color: kBlack,
+                  fontWeight: FontWeight.bold,
+                  size: 30,
+                ),
+                AppSizedBox.h16,
+                TextWidget(
+                  maxLine: 10,
+                  text:
+                      "We're glad to have you here. MedB is your trusted platform for healthcare needs — all in one place.",
+                  color: kBlack,
+                  size: 20,
+                ),
+                AppSizedBox.h16,
+                TextWidget(
+                  maxLine: 10,
+                  text:"Use the menu on the left to get started.",
+                  color: kGrey,
+                  size: 16,
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

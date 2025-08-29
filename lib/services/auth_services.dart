@@ -5,9 +5,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medb_task/models/login_model.dart';
 import 'package:medb_task/models/register_model.dart';
 import 'package:medb_task/services/dio_client.dart';
+import 'package:medb_task/services/hive_service.dart';
 import 'package:medb_task/utils/app_string.dart';
-import 'dart:convert';
-import 'package:hive/hive.dart';
 
 class AuthServices {
   final DioClient dioClient = DioClient();
@@ -61,8 +60,10 @@ Future<String> login({required LoginModel loginModel}) async {
     if (response.statusCode == 200 && response.data != null) {
       final accessToken = response.data[AppStrings.accessToken];
       if (accessToken != null) {
+        //Store token in flutter secure storage
          await _storage.write(key: AppStrings.accessToken, value: accessToken);
-         await saveLoginResponse(response.data["userDetails"]);
+         //user details store in hive
+         await HiveService().saveLoginResponse(response.data["userDetails"],response.data["menuData"]);
         
         log("Login successful");
         return "Login successful";
@@ -124,20 +125,4 @@ Future<String> login({required LoginModel loginModel}) async {
 }
 
 
-Future<void> saveLoginResponse(Map<String, dynamic> response) async {
-  log("save hive called");
-  final box = Hive.box("authBox");
 
-  // store as string
-  await box.put("loginResponse", jsonEncode(response));
-}
-Map<String, dynamic>? getLoginResponse() {
-  log("get hive stared");
-  final box = Hive.box("authBox");
-  final data = box.get("loginResponse");
-
-  if (data != null) {
-    return jsonDecode(data);
-  }
-  return null;
-}
