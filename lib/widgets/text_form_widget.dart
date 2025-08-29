@@ -7,16 +7,16 @@ class TextFormFieldWidget extends StatefulWidget {
   final int maxLine;
   final IconData? prefixIcon;
   final String labeltext;
-  
+
   final TypeOfField type;
   const TextFormFieldWidget({
     super.key,
     required this.controller,
     required this.validator,
     this.maxLine = 1,
-     this.prefixIcon,
+    this.prefixIcon,
     this.labeltext = "",
-    this.type = TypeOfField.normal
+    this.type = TypeOfField.normal,
   });
 
   @override
@@ -24,26 +24,32 @@ class TextFormFieldWidget extends StatefulWidget {
 }
 
 class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
-     bool hide = true;
+  bool hide = true;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      
-      obscureText: hide,
+      obscureText: widget.type == TypeOfField.normal ? false : hide,
       maxLines: widget.maxLine,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: widget.validator,
       controller: widget.controller,
 
       decoration: InputDecoration(
-        suffixIcon: (widget.type==TypeOfField.password)?IconButton(onPressed: (){
-          setState(() {
-            hide = !hide;
-          });
-        }, icon: Icon(hide?Icons.visibility_off:Icons.visibility)):null,
+        suffixIcon: (widget.type == TypeOfField.password)
+            ? IconButton(
+                onPressed: () {
+                  setState(() {
+                    hide = !hide;
+                  });
+                },
+                icon: Icon(hide ? Icons.visibility_off : Icons.visibility),
+              )
+            : null,
         label: Text(widget.labeltext),
-        prefixIcon: (widget.prefixIcon!=null)?Icon(widget.prefixIcon):null,
+        prefixIcon: (widget.prefixIcon != null)
+            ? Icon(widget.prefixIcon)
+            : null,
         border: InputBorder.none,
         filled: true,
         fillColor: kWhite,
@@ -63,4 +69,5 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
     );
   }
 }
+
 enum TypeOfField { normal, password }
