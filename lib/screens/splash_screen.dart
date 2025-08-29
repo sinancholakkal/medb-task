@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void>splashing()async{
     final accessToken = await FlutterSecureStorage().read(key: AppStrings.accessToken);
     log(accessToken.toString());
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     if(accessToken !=null){
       context.go("/home");
     }else{
@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Center(child: Text("Loading"),),
+        child: Center(child: Image.asset("asset/medb-logo-png-BRGSYv_I.png",width: 100,)),
       ),
     );
   }

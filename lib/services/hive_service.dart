@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:hive/hive.dart';
 import 'package:medb_task/models/module_model.dart';
 import 'package:medb_task/models/user_model.dart';
@@ -31,5 +32,10 @@ class HiveService {
     return response.map((e) => ModuleModel.fromJson(e)).toList();
     }
     return null;
+  }
+  Future<void> clearAllData() async {
+    final box = Hive.box("authBox");
+    await box.clear();
+    log("Hive data cleared");
   }
 }

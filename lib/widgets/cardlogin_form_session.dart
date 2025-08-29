@@ -70,6 +70,7 @@ class _CardLoginFormSessionState extends State<CardLoginFormSession> {
                 },
               ),
               TextFormFieldWidget(
+                type: TypeOfField.password,
                 labeltext: AppStrings.password,
                 controller: passwordController,
                 prefixIcon: Icons.lock_outline_rounded,

@@ -1,20 +1,17 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medb_task/bloc/auth/auth_bloc.dart';
-import 'package:medb_task/bloc/hive_bloc/hive_bloc.dart';
 import 'package:medb_task/utils/app_color.dart';
-import 'package:medb_task/utils/app_sizes.dart';
 import 'package:medb_task/utils/app_string.dart';
 import 'package:medb_task/widgets/app_sizedbox.dart';
 import 'package:medb_task/widgets/drawer_session.dart';
+import 'package:medb_task/widgets/home_center_session.dart';
 import 'package:medb_task/widgets/image_button.dart';
 import 'package:medb_task/widgets/loading.dart';
 import 'package:medb_task/widgets/show_diolog.dart';
-import 'package:medb_task/widgets/text_feild.dart';
 import 'package:medb_task/widgets/toast.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -64,40 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
             flutterToast(msg: state.errorMessage);
           }
         },
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("asset/medb-logo-png-BRGSYv_I.png", width: 100),
-                AppSizedBox.h24,
-                TextWidget(
-                  text: "Welcome to MedB!",
-                  color: kBlack,
-                  fontWeight: FontWeight.bold,
-                  size: 30,
-                ),
-                AppSizedBox.h16,
-                TextWidget(
-                  maxLine: 10,
-                  text:
-                      "We're glad to have you here. MedB is your trusted platform for healthcare needs — all in one place.",
-                  color: kBlack,
-                  size: 20,
-                ),
-                AppSizedBox.h16,
-                TextWidget(
-                  maxLine: 10,
-                  text:"Use the menu on the left to get started.",
-                  color: kGrey,
-                  size: 16,
-                )
-              ],
-            ),
-          ),
-        ),
+        //Greeting
+        child: HomeCenterSession(),
       ),
     );
   }
 }
+

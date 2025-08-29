@@ -111,6 +111,7 @@ Future<String> login({required LoginModel loginModel}) async {
 
         await _storage.delete(key: AppStrings.accessToken);
         await dioClient.cookieJar.deleteAll();
+        await HiveService().clearAllData();
         return true;
       } else {
         log("Logout failed: ${response.statusCode} ${response.data}");

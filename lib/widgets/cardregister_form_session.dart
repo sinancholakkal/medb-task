@@ -111,6 +111,7 @@ class _CardRegisterFormSessionState extends State<CardRegisterFormSession> {
               ),
               //Password field-------
               TextFormFieldWidget(
+                type: TypeOfField.password,
                 labeltext: AppStrings.password,
                 controller: passwordController,
                 validator: (p0) {
@@ -119,6 +120,7 @@ class _CardRegisterFormSessionState extends State<CardRegisterFormSession> {
               ),
               //Conform paswrd field--------
               TextFormFieldWidget(
+                type: TypeOfField.password,
                 labeltext: AppStrings.conformpassword,
                 controller: conformPasswordController,
                 validator: (p0) {

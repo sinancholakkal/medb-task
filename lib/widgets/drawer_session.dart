@@ -49,19 +49,22 @@ class _DrawerSessionState extends State<DrawerSession> {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ListTile(
-                          leading: CircleAvatar(radius: kmenuRadius,child: Image.network(module.moduleIcon),),
-                          title: TextWidget(
-                            text: module.moduleName,
-                            color: kBlack,
-                            fontWeight: FontWeight.bold,
-                            size: 20,
+                        SizedBox(
+                          child: ListTile(
+                            leading: CircleAvatar(radius: kmenuRadius,child: Image.network(module.moduleIcon),),
+                            title: TextWidget(
+                              text: module.moduleName,
+                              color: kBlack,
+                              fontWeight: FontWeight.bold,
+                              size: 20,
+                            ),
+                            onTap: (){
+                              setState(() {
+                                isExpanded = !isExpanded;
+                              });
+                            },
+                            trailing: SizedBox(width: 120,),
                           ),
-                          onTap: (){
-                            setState(() {
-                              isExpanded = !isExpanded;
-                            });
-                          },
                         ),
                         isExpanded?SizedBox(
                           child: Padding(
@@ -77,6 +80,7 @@ class _DrawerSessionState extends State<DrawerSession> {
                                   },),
                                 ),
                                 title: TextWidget(text: module.menus[index].menuName,color: kGrey,size: 16,),
+                                trailing: SizedBox(width: 60,),
                               );
                             },itemCount: module.menus.length,),
                           ),
