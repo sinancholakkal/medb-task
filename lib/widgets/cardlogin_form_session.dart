@@ -9,6 +9,7 @@ import 'package:medb_task/utils/app_color.dart';
 import 'package:medb_task/utils/app_string.dart';
 import 'package:medb_task/utils/app_validation.dart';
 import 'package:medb_task/widgets/elevated_button.dart';
+import 'package:medb_task/widgets/loading.dart';
 import 'package:medb_task/widgets/rich_text_widget.dart';
 import 'package:medb_task/widgets/text_feild.dart';
 import 'package:medb_task/widgets/text_form_widget.dart';
@@ -39,10 +40,17 @@ class _CardLoginFormSessionState extends State<CardLoginFormSession> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if(state is AuthLoadedState){
+        if(state is AuthLoadingState){
+          loadingWidget(context);
+          
+        }
+       else if(state is AuthLoadedState){
+        context.pop();
+        log("AuthLoaded state");
           flutterToast(msg: state.message);
           context.go("/home");
         }else if(state is AuthErrorState){
+          context.pop();
           flutterToast(msg: state.errorMessage);
         }
       },

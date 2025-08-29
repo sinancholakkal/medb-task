@@ -1,17 +1,40 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medb_task/bloc/auth/auth_bloc.dart';
+import 'package:medb_task/services/auth_services.dart';
 import 'package:medb_task/utils/app_color.dart';
 import 'package:medb_task/utils/app_string.dart';
 import 'package:medb_task/widgets/app_sizedbox.dart';
 import 'package:medb_task/widgets/image_button.dart';
+import 'package:medb_task/widgets/loading.dart';
 import 'package:medb_task/widgets/show_diolog.dart';
 import 'package:medb_task/widgets/text_feild.dart';
 import 'package:medb_task/widgets/toast.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  void get(){
+    final resp =  getLoginResponse();
+    if(resp!=null){
+      log(resp["firstName"]);
+      log("======================");
+    }
+  }
+  @override
+  void initState() {
+get();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,10 +84,14 @@ class HomeScreen extends StatelessWidget {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if(state is AuthLoadedState){
+          if (state is AuthLoadingState) {
+            loadingWidget(context);
+          } else if (state is AuthLoadedState) {
+            context.pop();
             flutterToast(msg: state.message);
             context.go("/login");
-          }else if(state is AuthErrorState){
+          } else if (state is AuthErrorState) {
+            context.pop();
             flutterToast(msg: state.errorMessage);
           }
         },

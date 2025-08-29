@@ -7,6 +7,7 @@ import 'package:medb_task/models/register_model.dart';
 import 'package:medb_task/utils/app_string.dart';
 import 'package:medb_task/utils/app_validation.dart';
 import 'package:medb_task/widgets/elevated_button.dart';
+import 'package:medb_task/widgets/loading.dart';
 import 'package:medb_task/widgets/rich_text_widget.dart';
 import 'package:medb_task/widgets/text_form_widget.dart';
 import 'package:medb_task/widgets/toast.dart';
@@ -39,13 +40,16 @@ class _CardRegisterFormSessionState extends State<CardRegisterFormSession> {
 
   @override
   Widget build(BuildContext context) {
-    
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if(state is AuthLoadedState){
+        if (state is AuthLoadingState) {
+          loadingWidget(context);
+        } else if (state is AuthLoadedState) {
+          context.pop();
           flutterToast(msg: "${state.message}! Please verify your email");
           context.go("/login");
-        }else if(state is AuthErrorState){
+        } else if (state is AuthErrorState) {
+          context.pop();
           flutterToast(msg: state.errorMessage);
         }
       },

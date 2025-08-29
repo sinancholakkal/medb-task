@@ -11,6 +11,6 @@ class ImageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(child: Image.asset(image,width: width,),onTap:onTap ,);
+    return InkWell(onTap:onTap ,child: Image.asset(image,width: width,),);
   }
 }
