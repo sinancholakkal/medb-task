@@ -1,16 +1,32 @@
-# medb_task
+# MedB Task - Flutter Application  
 
-A new Flutter project.
+This is my mission task project built using **Flutter**.  
+The application demonstrates **UI building, API integration, state management, Hive, and secure storage**.  
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
+- User **Registration & Login**  
+- **Token-based Authentication** with Refresh Token  
+- **Logout** with Cookie & Secure Storage handling  
+- **Dynamic Menu** (Modules loaded from API: `moduleId`, `moduleName`, `sortOrder`, `moduleIcon`)  
+- Clean project structure:
+  - `models/` → Data Models & JSON Parsing  
+  - `services/` → API Clients / Networking Layer  
+  - `providers/ or bloc/` → State Management  
+  - `screens/` → UI Pages  
+  - `widgets/` → Reusable UI Components  
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🛠️ Tech Stack
+- **Flutter** (Dart)  
+- **Dio** for API calls  
+- **Flutter Secure Storage** for access token
+- **Hive** for local database storage (response)
+- **Dio Cookie Manager + Cookie Jar** for handling refresh tokens (cookies)  
+- **Bloc** (state management – based on requirement)  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+
